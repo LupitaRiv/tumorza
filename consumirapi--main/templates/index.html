@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Tumor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #283048, #859398);
+            color: white;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 15px auto;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .loading {
+            display: none;
+            margin-top: 15px;
+        }
+        .result {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Predicción de Tumor MRI</h1>
+        <form action="/predict" method="POST" enctype="multipart/form-data" id="predict-form">
+            <input type="file" name="image" id="image" required>
+            <button type="submit">Predecir</button>
+        </form>
+        <div class="loading" id="loading">Cargando...</div>
+        
+        {% if result %}
+            <div class="result">
+                <h2>Resultado: {{ result }}</h2>
+                <p>Probabilidad de tumor: {{ "%.2f"|format(probability*100) }}%</p>
+                {% if original_image %}<img src="{{ original_image }}" alt="Imagen Original">{% endif %}
+                {% if overlay_image %}<img src="{{ overlay_image }}" alt="Tumor Destacado">{% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', function(event) {
+            document.getElementById('loading').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
